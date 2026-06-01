@@ -3,147 +3,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trang cá nhân của Mr Khanhnn">
-    <title>Mr Khanhnn</title>
+    <meta name="description" content="CV Nguyễn Ngọc Khánh — Giám đốc Công nghệ (CTO) với hơn 15 năm kinh nghiệm trong lĩnh vực công nghệ thông tin">
+    <title>Mr Khanhnn — CTO</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #0a0a0f;
-            font-family: 'JetBrains Mono', monospace;
-            overflow: hidden;
-            position: relative;
-        }
-
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.07;
-            pointer-events: none;
-        }
-
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                0deg, transparent, transparent 2px,
-                rgba(0, 255, 65, 0.012) 2px, rgba(0, 255, 65, 0.012) 4px
-            );
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        .message {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.4rem, 4vw, 2.8rem);
-            font-weight: 700;
-            color: #00ff41;
-            text-shadow:
-                0 0 10px rgba(0, 255, 65, 0.4),
-                0 0 40px rgba(0, 255, 65, 0.15),
-                0 0 80px rgba(0, 255, 65, 0.05);
-            letter-spacing: 3px;
-            animation: fadeGlow 3s ease-in-out infinite alternate;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1em;
-            background: #00ff41;
-            margin-left: 4px;
-            vertical-align: text-bottom;
-            animation: blink 0.8s infinite;
-            box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
-        }
-
-        @keyframes fadeGlow {
-            0% { text-shadow: 0 0 10px rgba(0,255,65,0.4), 0 0 40px rgba(0,255,65,0.15); }
-            100% { text-shadow: 0 0 20px rgba(0,255,65,0.6), 0 0 60px rgba(0,255,65,0.25), 0 0 100px rgba(0,255,65,0.1); }
-        }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="matrix"></canvas>
-    <div class="scanline"></div>
-    <div class="container">
-        <h1 class="message" id="typed"></h1>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
     </div>
-    <script>
-        (function () {
-            'use strict';
 
-            // Matrix rain
-            var canvas = document.getElementById('matrix');
-            var ctx = canvas.getContext('2d');
-            function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
-            resize();
-            addEventListener('resize', resize);
-            var chars = 'アイウエオカキクケコ0123456789ABCDEF<>{}[]';
-            var arr = chars.split('');
-            var sz = 14, cols = Math.floor(canvas.width / sz);
-            var drops = [];
-            for (var i = 0; i < cols; i++) drops[i] = Math.random() * -100;
-            setInterval(function () {
-                ctx.fillStyle = 'rgba(10,10,15,0.06)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#00ff41';
-                ctx.font = sz + 'px JetBrains Mono,monospace';
-                for (var i = 0; i < drops.length; i++) {
-                    ctx.fillText(arr[Math.floor(Math.random() * arr.length)], i * sz, drops[i] * sz);
-                    if (drops[i] * sz > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                    drops[i]++;
-                }
-            }, 50);
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#hero" class="nav-brand">NK</a>
+            <div class="nav-links" id="nav-links">
+                <a href="#about" class="nav-link">Giới thiệu</a>
+                <a href="#experience" class="nav-link">Kinh nghiệm</a>
+                <a href="#skills" class="nav-link">Năng lực</a>
+                <a href="#education" class="nav-link">Học vấn</a>
+                <a href="#achievements" class="nav-link">Thành tựu</a>
+                <a href="#contact" class="nav-link">Liên hệ</a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
 
-            // Typing effect — uses safe DOM APIs only
-            var el = document.getElementById('typed');
-            var text = 'Chào bạn, tôi là Khánh đây ^^';
-            var idx = 0;
-            var textNode = document.createTextNode('');
-            var cursor = document.createElement('span');
-            cursor.className = 'cursor';
-            el.appendChild(textNode);
-            el.appendChild(cursor);
-            function type() {
-                if (idx <= text.length) {
-                    textNode.textContent = text.substring(0, idx);
-                    idx++;
-                    setTimeout(type, 90);
-                }
-            }
-            setTimeout(type, 800);
-        })();
-    </script>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-badge">Chief Technology Officer</div>
+                    <h1 class="hero-name">
+                        <span class="hero-first">Nguyễn Ngọc</span>
+                        <span class="hero-last">Khánh</span>
+                    </h1>
+                    <p class="hero-tagline">Kiến tạo nền tảng công nghệ — Dẫn dắt đổi mới sáng tạo</p>
+                    <div class="hero-meta">
+                        <span class="meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Hà Nội, Việt Nam
+                        </span>
+                        <span class="meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            15+ năm kinh nghiệm
+                        </span>
+                        <span class="meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            12.04.1985
+                        </span>
+                    </div>
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn btn-primary">Liên hệ ngay</a>
+                        <a href="#experience" class="btn btn-outline">Xem CV</a>
+                    </div>
+                </div>
+                <div class="hero-avatar">
+                    <div class="avatar-ring">
+                        <div class="avatar-ring-inner"></div>
+                        <img src="avatar.png" alt="Nguyễn Ngọc Khánh" class="avatar-img" loading="eager">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="section" id="about">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">01</span>
+                    <h2 class="section-title">Giới thiệu</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p class="about-lead">
+                            Với hơn <strong>15 năm kinh nghiệm</strong> trong ngành công nghệ thông tin, tôi là một nhà lãnh đạo
+                            công nghệ có tầm nhìn chiến lược, chuyên xây dựng và dẫn dắt các đội ngũ kỹ thuật xuất sắc
+                            để kiến tạo những sản phẩm công nghệ đột phá.
+                        </p>
+                        <p>
+                            Tôi tin rằng công nghệ không chỉ là công cụ, mà là động lực thúc đẩy sự phát triển bền vững
+                            của doanh nghiệp. Sứ mệnh của tôi là kết nối tầm nhìn kinh doanh với giải pháp công nghệ,
+                            tạo ra giá trị thực sự cho tổ chức và xã hội.
+                        </p>
+                    </div>
+                    <div class="about-highlights">
+                        <div class="highlight-card">
+                            <div class="highlight-number" data-target="200">0</div>
+                            <div class="highlight-label">Kỹ sư đã dẫn dắt</div>
+                        </div>
+                        <div class="highlight-card">
+                            <div class="highlight-number" data-target="50">0</div>
+                            <div class="highlight-label">Dự án thành công</div>
+                        </div>
+                        <div class="highlight-card">
+                            <div class="highlight-number" data-target="15">0</div>
+                            <div class="highlight-label">Năm kinh nghiệm</div>
+                        </div>
+                        <div class="highlight-card">
+                            <div class="highlight-number" data-target="5">0</div>
+                            <div class="highlight-label">Công ty đã làm CTO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="section section-alt" id="experience">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">02</span>
+                    <h2 class="section-title">Kinh nghiệm làm việc</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2021 — Hiện tại</div>
+                        <div class="timeline-card">
+                            <div class="timeline-badge current">Hiện tại</div>
+                            <h3 class="timeline-role">Giám đốc Công nghệ (CTO)</h3>
+                            <p class="timeline-company">TechVision Corporation</p>
+                            <p class="timeline-desc">
+                                Lãnh đạo chiến lược công nghệ cho toàn tập đoàn với hơn 150 kỹ sư phần mềm.
+                                Xây dựng kiến trúc microservices phục vụ 10 triệu người dùng. Triển khai thành công
+                                chuyển đổi số toàn diện, tăng hiệu suất vận hành 40%.
+                            </p>
+                            <div class="timeline-tags">
+                                <span>Cloud Architecture</span>
+                                <span>AI/ML</span>
+                                <span>Digital Transformation</span>
+                                <span>Team Leadership</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2017 — 2021</div>
+                        <div class="timeline-card">
+                            <h3 class="timeline-role">VP of Engineering</h3>
+                            <p class="timeline-company">FinTech Solutions JSC</p>
+                            <p class="timeline-desc">
+                                Quản lý 80+ kỹ sư, xây dựng nền tảng thanh toán số xử lý 1 triệu giao dịch/ngày.
+                                Thiết lập quy trình DevOps, CI/CD giảm thời gian triển khai từ 2 tuần xuống 2 giờ.
+                                Dẫn dắt việc áp dụng Kubernetes và container hóa toàn bộ hệ thống.
+                            </p>
+                            <div class="timeline-tags">
+                                <span>FinTech</span>
+                                <span>DevOps</span>
+                                <span>Kubernetes</span>
+                                <span>Payment Systems</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2013 — 2017</div>
+                        <div class="timeline-card">
+                            <h3 class="timeline-role">Engineering Manager</h3>
+                            <p class="timeline-company">DataStream Technologies</p>
+                            <p class="timeline-desc">
+                                Xây dựng đội ngũ backend từ 5 lên 35 kỹ sư. Kiến trúc hệ thống Big Data xử lý
+                                100TB dữ liệu/ngày. Triển khai machine learning pipeline cho hệ thống recommendation
+                                phục vụ 5 triệu người dùng hoạt động hàng ngày.
+                            </p>
+                            <div class="timeline-tags">
+                                <span>Big Data</span>
+                                <span>Machine Learning</span>
+                                <span>Scalable Systems</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2010 — 2013</div>
+                        <div class="timeline-card">
+                            <h3 class="timeline-role">Senior Software Engineer</h3>
+                            <p class="timeline-company">VietSoft International</p>
+                            <p class="timeline-desc">
+                                Phát triển các giải pháp enterprise cho khách hàng quốc tế. Chuyên sâu về
+                                Java/Spring ecosystem và kiến trúc hệ thống phân tán. Mentor cho 10+ junior developers.
+                            </p>
+                            <div class="timeline-tags">
+                                <span>Java</span>
+                                <span>Spring</span>
+                                <span>Distributed Systems</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="section" id="skills">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">03</span>
+                    <h2 class="section-title">Năng lực cốt lõi</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="skills-layout">
+                    <div class="skills-group">
+                        <h3 class="skills-group-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            Kỹ năng kỹ thuật
+                        </h3>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Cloud Architecture (AWS, GCP, Azure)</span>
+                                <span class="skill-pct">95%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">System Design & Microservices</span>
+                                <span class="skill-pct">92%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">AI / Machine Learning</span>
+                                <span class="skill-pct">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">DevOps & CI/CD</span>
+                                <span class="skill-pct">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Cybersecurity & Compliance</span>
+                                <span class="skill-pct">82%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+                        </div>
+                    </div>
+                    <div class="skills-group">
+                        <h3 class="skills-group-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            Kỹ năng lãnh đạo
+                        </h3>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Chiến lược công nghệ</span>
+                                <span class="skill-pct">96%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill leadership" data-width="96"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Quản lý đội ngũ lớn (100+)</span>
+                                <span class="skill-pct">93%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill leadership" data-width="93"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Product Strategy & Roadmap</span>
+                                <span class="skill-pct">88%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill leadership" data-width="88"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Agile / Scrum at Scale</span>
+                                <span class="skill-pct">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill leadership" data-width="90"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Budget & Vendor Management</span>
+                                <span class="skill-pct">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill leadership" data-width="85"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-stack">
+                    <h3 class="tech-stack-title">Tech Stack</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Java</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Go</span>
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Kubernetes</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">AWS</span>
+                        <span class="tech-tag">Terraform</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">MongoDB</span>
+                        <span class="tech-tag">Redis</span>
+                        <span class="tech-tag">Kafka</span>
+                        <span class="tech-tag">Elasticsearch</span>
+                        <span class="tech-tag">GraphQL</span>
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">Spark</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="section section-alt" id="education">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">04</span>
+                    <h2 class="section-title">Học vấn & Chứng chỉ</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="edu-grid">
+                    <div class="edu-card">
+                        <div class="edu-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 6 3 6 3s3 0 6-3v-5"/></svg>
+                        </div>
+                        <div class="edu-period">2007 — 2009</div>
+                        <h3 class="edu-degree">Thạc sĩ Khoa học Máy tính</h3>
+                        <p class="edu-school">Đại học Bách khoa Hà Nội</p>
+                        <p class="edu-detail">Chuyên ngành: Hệ thống phân tán & Trí tuệ nhân tạo</p>
+                    </div>
+                    <div class="edu-card">
+                        <div class="edu-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 6 3 6 3s3 0 6-3v-5"/></svg>
+                        </div>
+                        <div class="edu-period">2003 — 2007</div>
+                        <h3 class="edu-degree">Cử nhân Công nghệ Thông tin</h3>
+                        <p class="edu-school">Đại học Bách khoa Hà Nội</p>
+                        <p class="edu-detail">Tốt nghiệp loại Giỏi — GPA: 3.6/4.0</p>
+                    </div>
+                    <div class="edu-card cert-card">
+                        <div class="edu-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                        </div>
+                        <h3 class="edu-degree">Chứng chỉ chuyên môn</h3>
+                        <ul class="cert-list">
+                            <li>AWS Solutions Architect Professional</li>
+                            <li>Google Cloud Professional Architect</li>
+                            <li>Certified Kubernetes Administrator</li>
+                            <li>PMP — Project Management Professional</li>
+                            <li>TOGAF 9 Certified</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section class="section" id="achievements">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">05</span>
+                    <h2 class="section-title">Thành tựu nổi bật</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">&#x1F3C6;</div>
+                        <h3>Top 10 CTO Việt Nam</h3>
+                        <p>Được vinh danh trong danh sách Top 10 CTO có ảnh hưởng nhất Việt Nam 2024 bởi TechAsia.</p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">&#x1F680;</div>
+                        <h3>Chuyển đổi số thành công</h3>
+                        <p>Dẫn dắt dự án chuyển đổi số trị giá 5 triệu USD, giúp doanh nghiệp tăng trưởng doanh thu 60%.</p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">&#x1F4A1;</div>
+                        <h3>2 Patent công nghệ</h3>
+                        <p>Sở hữu 2 bằng sáng chế về xử lý dữ liệu lớn thời gian thực và AI recommendation engine.</p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">&#x1F30F;</div>
+                        <h3>Diễn giả quốc tế</h3>
+                        <p>Diễn giả tại các hội nghị công nghệ lớn: AWS re:Invent, Google I/O Extended, TechSummit APAC.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section section-alt" id="contact">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">06</span>
+                    <h2 class="section-title">Liên hệ</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="contact-layout">
+                    <div class="contact-message">
+                        <h3>Hãy kết nối với tôi</h3>
+                        <p>Tôi luôn sẵn sàng trao đổi về chiến lược công nghệ, cơ hội hợp tác, hoặc đơn giản là chia sẻ kinh nghiệm trong ngành.</p>
+                    </div>
+                    <div class="contact-cards">
+                        <a class="contact-card" href="mailto:khanh.nn@techvision.vn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            <div>
+                                <span class="contact-label">Email</span>
+                                <span class="contact-value">khanh.nn@techvision.vn</span>
+                            </div>
+                        </a>
+                        <a class="contact-card" href="tel:+84912345678">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <div>
+                                <span class="contact-label">Điện thoại</span>
+                                <span class="contact-value">+84 912 345 678</span>
+                            </div>
+                        </a>
+                        <a class="contact-card" href="https://linkedin.com/in/khanhnn" target="_blank" rel="noopener noreferrer">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                            <div>
+                                <span class="contact-label">LinkedIn</span>
+                                <span class="contact-value">linkedin.com/in/khanhnn</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p class="footer-text">&copy; 2025 Nguyễn Ngọc Khánh — Chief Technology Officer</p>
+            <p class="footer-sub">Thiết kế với &#x2764; và sự tỉ mỉ</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
