@@ -3,484 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio CV của một hacker ẩn mình - Chuyên gia bảo mật mạng và penetration testing">
-    <title>SH4D0W_X | Hacker Portfolio</title>
+    <meta name="description" content="Trang cá nhân của Khánh">
+    <title>Khánh</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a0f;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            position: relative;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.07;
+            pointer-events: none;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg, transparent, transparent 2px,
+                rgba(0, 255, 65, 0.012) 2px, rgba(0, 255, 65, 0.012) 4px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .message {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.4rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: #00ff41;
+            text-shadow:
+                0 0 10px rgba(0, 255, 65, 0.4),
+                0 0 40px rgba(0, 255, 65, 0.15),
+                0 0 80px rgba(0, 255, 65, 0.05);
+            letter-spacing: 3px;
+            animation: fadeGlow 3s ease-in-out infinite alternate;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #00ff41;
+            margin-left: 4px;
+            vertical-align: text-bottom;
+            animation: blink 0.8s infinite;
+            box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+        }
+
+        @keyframes fadeGlow {
+            0% { text-shadow: 0 0 10px rgba(0,255,65,0.4), 0 0 40px rgba(0,255,65,0.15); }
+            100% { text-shadow: 0 0 20px rgba(0,255,65,0.6), 0 0 60px rgba(0,255,65,0.25), 0 0 100px rgba(0,255,65,0.1); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Matrix Rain Canvas Background -->
-    <canvas id="matrix-canvas"></canvas>
-
-    <!-- Scan Line Overlay -->
-    <div class="scanline-overlay"></div>
-
-    <!-- Navigation -->
-    <nav class="nav" id="nav">
-        <div class="nav-brand">
-            <span class="nav-logo">&lt;/&gt;</span>
-            <span class="nav-name glitch-text" data-text="SH4D0W_X">SH4D0W_X</span>
-        </div>
-        <div class="nav-links">
-            <a href="#home" class="nav-link active">~/home</a>
-            <a href="#about" class="nav-link">~/about</a>
-            <a href="#skills" class="nav-link">~/skills</a>
-            <a href="#experience" class="nav-link">~/exp</a>
-            <a href="#projects" class="nav-link">~/projects</a>
-            <a href="#contact" class="nav-link">~/contact</a>
-        </div>
-        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
-
-    <!-- Mobile Nav -->
-    <div class="mobile-nav" id="mobile-nav">
-        <a href="#home" class="mobile-nav-link">~/home</a>
-        <a href="#about" class="mobile-nav-link">~/about</a>
-        <a href="#skills" class="mobile-nav-link">~/skills</a>
-        <a href="#experience" class="mobile-nav-link">~/exp</a>
-        <a href="#projects" class="mobile-nav-link">~/projects</a>
-        <a href="#contact" class="mobile-nav-link">~/contact</a>
+    <canvas id="matrix"></canvas>
+    <div class="scanline"></div>
+    <div class="container">
+        <h1 class="message" id="typed"></h1>
     </div>
+    <script>
+        (function () {
+            'use strict';
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero" id="home">
-            <div class="hero-content">
-                <div class="hero-terminal">
-                    <div class="terminal-header">
-                        <div class="terminal-dots">
-                            <span class="dot red"></span>
-                            <span class="dot yellow"></span>
-                            <span class="dot green"></span>
-                        </div>
-                        <span class="terminal-title">root@shadow:~</span>
-                    </div>
-                    <div class="terminal-body">
-                        <p class="terminal-line"><span class="prompt">$</span> <span class="command">whoami</span></p>
-                        <div class="hero-name-wrapper">
-                            <h1 class="hero-name glitch-text" data-text="SH4D0W_X">SH4D0W_X</h1>
-                        </div>
-                        <p class="terminal-line"><span class="prompt">$</span> <span class="command">cat role.txt</span></p>
-                        <p class="hero-role" id="typed-role"></p>
-                        <p class="terminal-line"><span class="prompt">$</span> <span class="command">echo $STATUS</span></p>
-                        <p class="hero-status">
-                            <span class="status-dot"></span>
-                            Ẩn mình trong bóng tối, bảo vệ thế giới số
-                        </p>
-                    </div>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat-card">
-                        <span class="stat-number" data-target="7">0</span>
-                        <span class="stat-label">Năm kinh nghiệm</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" data-target="150">0</span>
-                        <span class="stat-label">CVE phát hiện</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" data-target="500">0</span>
-                        <span class="stat-label">Hệ thống pentest</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number" data-target="99">0</span>
-                        <span class="stat-label">% Uptime ẩn danh</span>
-                    </div>
-                </div>
-            </div>
-            <div class="scroll-indicator">
-                <span>Scroll to decrypt</span>
-                <div class="scroll-arrow"></div>
-            </div>
-        </section>
+            // Matrix rain
+            var canvas = document.getElementById('matrix');
+            var ctx = canvas.getContext('2d');
+            function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+            resize();
+            addEventListener('resize', resize);
+            var chars = 'アイウエオカキクケコ0123456789ABCDEF<>{}[]';
+            var arr = chars.split('');
+            var sz = 14, cols = Math.floor(canvas.width / sz);
+            var drops = [];
+            for (var i = 0; i < cols; i++) drops[i] = Math.random() * -100;
+            setInterval(function () {
+                ctx.fillStyle = 'rgba(10,10,15,0.06)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00ff41';
+                ctx.font = sz + 'px JetBrains Mono,monospace';
+                for (var i = 0; i < drops.length; i++) {
+                    ctx.fillText(arr[Math.floor(Math.random() * arr.length)], i * sz, drops[i] * sz);
+                    if (drops[i] * sz > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }, 50);
 
-        <!-- About Section -->
-        <section class="section" id="about">
-            <div class="container">
-                <h2 class="section-title">
-                    <span class="section-icon">&#x1F4C1;</span>
-                    <span class="glitch-text" data-text="cat ~/about.md">cat ~/about.md</span>
-                </h2>
-                <div class="about-grid">
-                    <div class="about-avatar">
-                        <div class="avatar-frame">
-                            <div class="avatar-placeholder">
-                                <div class="ascii-art">
-    ┌─────────────────┐
-    │  ╔═══╗  ╔═══╗   │
-    │  ║ ◉ ║  ║ ◉ ║   │
-    │  ╚═══╝  ╚═══╝   │
-    │     ╔═════╗      │
-    │     ║ ▓▓▓ ║      │
-    │     ╚═════╝      │
-    │   ┌─────────┐    │
-    │   │ ░░░░░░░ │    │
-    │   └─────────┘    │
-    └─────────────────┘
-                                </div>
-                            </div>
-                            <div class="avatar-scanline"></div>
-                        </div>
-                        <div class="avatar-label">[ IDENTITY CLASSIFIED ]</div>
-                    </div>
-                    <div class="about-content">
-                        <div class="about-terminal">
-                            <div class="terminal-header small">
-                                <div class="terminal-dots">
-                                    <span class="dot red"></span>
-                                    <span class="dot yellow"></span>
-                                    <span class="dot green"></span>
-                                </div>
-                                <span class="terminal-title">about.md</span>
-                            </div>
-                            <div class="terminal-body">
-                                <p class="about-text">
-                                    <span class="comment"># Giới thiệu</span><br><br>
-                                    Tôi là một <span class="highlight">chuyên gia bảo mật mạng</span> với hơn 7 năm kinh nghiệm
-                                    trong lĩnh vực <span class="highlight">penetration testing</span> và <span class="highlight">ethical hacking</span>.<br><br>
-                                    Hoạt động dưới bí danh <span class="accent">SH4D0W_X</span>, tôi đã tham gia nhiều chương trình
-                                    <span class="highlight">bug bounty</span> lớn trên thế giới và phát hiện hàng trăm lỗ hổng bảo mật nghiêm trọng.<br><br>
-                                    <span class="comment"># Triết lý</span><br><br>
-                                    <span class="quote">"Trong bóng tối, tôi tìm kiếm lỗ hổng. Trong ánh sáng, tôi bảo vệ hệ thống."</span><br><br>
-                                    <span class="comment"># Chứng chỉ</span><br>
-                                    <span class="cert">✓ OSCP</span> — Offensive Security Certified Professional<br>
-                                    <span class="cert">✓ CEH</span> — Certified Ethical Hacker<br>
-                                    <span class="cert">✓ OSCE</span> — Offensive Security Certified Expert<br>
-                                    <span class="cert">✓ CRTP</span> — Certified Red Team Professional<br>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section class="section" id="skills">
-            <div class="container">
-                <h2 class="section-title">
-                    <span class="section-icon">&#x1F527;</span>
-                    <span class="glitch-text" data-text="ls ~/skills/">ls ~/skills/</span>
-                </h2>
-                <div class="skills-grid">
-                    <div class="skill-card" data-skill="95">
-                        <div class="skill-icon">&#x1F50D;</div>
-                        <h3 class="skill-name">Penetration Testing</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
-                        <p class="skill-desc">Web, Mobile, Network, API pentesting</p>
-                    </div>
-                    <div class="skill-card" data-skill="90">
-                        <div class="skill-icon">&#x1F41B;</div>
-                        <h3 class="skill-name">Reverse Engineering</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
-                        <p class="skill-desc">Malware analysis, Binary exploitation</p>
-                    </div>
-                    <div class="skill-card" data-skill="88">
-                        <div class="skill-icon">&#x1F6E1;</div>
-                        <h3 class="skill-name">Network Security</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-                        <p class="skill-desc">Firewall, IDS/IPS, VPN, Wireshark</p>
-                    </div>
-                    <div class="skill-card" data-skill="92">
-                        <div class="skill-icon">&#x1F4BB;</div>
-                        <h3 class="skill-name">Exploit Development</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
-                        <p class="skill-desc">Buffer overflow, ROP chains, Shellcode</p>
-                    </div>
-                    <div class="skill-card" data-skill="85">
-                        <div class="skill-icon">&#x2601;</div>
-                        <h3 class="skill-name">Cloud Security</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-                        <p class="skill-desc">AWS, Azure, GCP security auditing</p>
-                    </div>
-                    <div class="skill-card" data-skill="87">
-                        <div class="skill-icon">&#x1F510;</div>
-                        <h3 class="skill-name">Cryptography</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="87"></div></div>
-                        <p class="skill-desc">RSA, AES, ECC, Protocol analysis</p>
-                    </div>
-                    <div class="skill-card" data-skill="93">
-                        <div class="skill-icon">&#x1F40D;</div>
-                        <h3 class="skill-name">Python / Scripting</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
-                        <p class="skill-desc">Automation, Tool development, PoC</p>
-                    </div>
-                    <div class="skill-card" data-skill="80">
-                        <div class="skill-icon">&#x1F916;</div>
-                        <h3 class="skill-name">Social Engineering</h3>
-                        <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
-                        <p class="skill-desc">Phishing simulation, OSINT, Recon</p>
-                    </div>
-                </div>
-
-                <div class="tools-section">
-                    <h3 class="tools-title">// Arsenal</h3>
-                    <div class="tools-grid">
-                        <span class="tool-tag">Burp Suite</span>
-                        <span class="tool-tag">Metasploit</span>
-                        <span class="tool-tag">Nmap</span>
-                        <span class="tool-tag">Wireshark</span>
-                        <span class="tool-tag">Ghidra</span>
-                        <span class="tool-tag">IDA Pro</span>
-                        <span class="tool-tag">Cobalt Strike</span>
-                        <span class="tool-tag">Hashcat</span>
-                        <span class="tool-tag">John the Ripper</span>
-                        <span class="tool-tag">SQLmap</span>
-                        <span class="tool-tag">Nikto</span>
-                        <span class="tool-tag">OWASP ZAP</span>
-                        <span class="tool-tag">Volatility</span>
-                        <span class="tool-tag">Aircrack-ng</span>
-                        <span class="tool-tag">Kali Linux</span>
-                        <span class="tool-tag">Tor</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section class="section" id="experience">
-            <div class="container">
-                <h2 class="section-title">
-                    <span class="section-icon">&#x1F4C5;</span>
-                    <span class="glitch-text" data-text="git log --oneline">git log --oneline</span>
-                </h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <span class="timeline-year">2025</span>
-                        </div>
-                        <div class="timeline-content">
-                            <div class="timeline-header">
-                                <h3>Lead Red Team Operator</h3>
-                                <span class="timeline-company">[ REDACTED ] — Fortune 500</span>
-                            </div>
-                            <p>Dẫn dắt đội Red Team thực hiện các chiến dịch tấn công mô phỏng APT. Phát hiện 23 lỗ hổng zero-day trong hệ thống nội bộ.</p>
-                            <div class="timeline-tags">
-                                <span>Red Team</span>
-                                <span>APT Simulation</span>
-                                <span>Zero-day</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <span class="timeline-year">2023</span>
-                        </div>
-                        <div class="timeline-content">
-                            <div class="timeline-header">
-                                <h3>Senior Security Researcher</h3>
-                                <span class="timeline-company">CyberX Labs</span>
-                            </div>
-                            <p>Nghiên cứu và phát triển exploit cho các lỗ hổng trong hệ điều hành và trình duyệt web. Công bố 15 CVE nghiêm trọng.</p>
-                            <div class="timeline-tags">
-                                <span>Exploit Dev</span>
-                                <span>CVE</span>
-                                <span>0-day Research</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <span class="timeline-year">2021</span>
-                        </div>
-                        <div class="timeline-content">
-                            <div class="timeline-header">
-                                <h3>Penetration Tester</h3>
-                                <span class="timeline-company">SecureTech Solutions</span>
-                            </div>
-                            <p>Thực hiện pentest cho hơn 200 hệ thống của khách hàng. Xây dựng phương pháp luận pentest chuẩn cho toàn công ty.</p>
-                            <div class="timeline-tags">
-                                <span>Pentest</span>
-                                <span>Web App</span>
-                                <span>Infrastructure</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-marker">
-                            <span class="timeline-year">2019</span>
-                        </div>
-                        <div class="timeline-content">
-                            <div class="timeline-header">
-                                <h3>Bug Bounty Hunter</h3>
-                                <span class="timeline-company">Freelance — HackerOne / Bugcrowd</span>
-                            </div>
-                            <p>Bắt đầu hành trình bug bounty. Đạt Hall of Fame tại Google, Microsoft, Facebook. Tổng bounty thu được: $250,000+.</p>
-                            <div class="timeline-tags">
-                                <span>Bug Bounty</span>
-                                <span>HackerOne</span>
-                                <span>Hall of Fame</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section class="section" id="projects">
-            <div class="container">
-                <h2 class="section-title">
-                    <span class="section-icon">&#x1F4E6;</span>
-                    <span class="glitch-text" data-text="ls ~/projects/">ls ~/projects/</span>
-                </h2>
-                <div class="projects-grid">
-                    <div class="project-card">
-                        <div class="project-header">
-                            <span class="project-status">&#x1F7E2; Active</span>
-                            <span class="project-lang">Python</span>
-                        </div>
-                        <h3 class="project-name">PhantomScan</h3>
-                        <p class="project-desc">Framework tự động hóa quét lỗ hổng bảo mật web với khả năng bypass WAF và tránh detection. Hỗ trợ 50+ loại lỗ hổng.</p>
-                        <div class="project-stats">
-                            <span>&#x2B50; 2.3k</span>
-                            <span>&#x1F374; 456</span>
-                            <span>&#x1F4E5; 15k downloads</span>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-header">
-                            <span class="project-status">&#x1F7E2; Active</span>
-                            <span class="project-lang">Rust</span>
-                        </div>
-                        <h3 class="project-name">GhostNet</h3>
-                        <p class="project-desc">Công cụ C2 framework nhẹ, mã hóa end-to-end, giao tiếp qua DNS tunneling và HTTPS. Chống phân tích với nhiều kỹ thuật anti-debug.</p>
-                        <div class="project-stats">
-                            <span>&#x2B50; 1.8k</span>
-                            <span>&#x1F374; 312</span>
-                            <span>&#x1F4E5; 8k downloads</span>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-header">
-                            <span class="project-status">&#x1F7E1; Maintenance</span>
-                            <span class="project-lang">Go</span>
-                        </div>
-                        <h3 class="project-name">CipherVault</h3>
-                        <p class="project-desc">Trình quản lý mật khẩu offline với mã hóa AES-256-GCM, key derivation bằng Argon2id. Zero-knowledge architecture.</p>
-                        <div class="project-stats">
-                            <span>&#x2B50; 3.1k</span>
-                            <span>&#x1F374; 678</span>
-                            <span>&#x1F4E5; 25k downloads</span>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-header">
-                            <span class="project-status">&#x1F7E2; Active</span>
-                            <span class="project-lang">C/ASM</span>
-                        </div>
-                        <h3 class="project-name">NightCrawler</h3>
-                        <p class="project-desc">Rootkit detector và memory forensics toolkit. Phát hiện kernel-level rootkit, hidden processes và network connections.</p>
-                        <div class="project-stats">
-                            <span>&#x2B50; 1.5k</span>
-                            <span>&#x1F374; 234</span>
-                            <span>&#x1F4E5; 6k downloads</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section class="section" id="contact">
-            <div class="container">
-                <h2 class="section-title">
-                    <span class="section-icon">&#x1F4E7;</span>
-                    <span class="glitch-text" data-text="ssh contact@shadow">ssh contact@shadow</span>
-                </h2>
-                <div class="contact-grid">
-                    <div class="contact-terminal">
-                        <div class="terminal-header small">
-                            <div class="terminal-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <span class="terminal-title">secure_channel.sh</span>
-                        </div>
-                        <div class="terminal-body">
-                            <p class="terminal-line"><span class="prompt">$</span> <span class="command">cat contact_info.enc | gpg --decrypt</span></p>
-                            <br>
-                            <div class="contact-info">
-                                <div class="contact-item">
-                                    <span class="contact-icon">&#x1F4E7;</span>
-                                    <div>
-                                        <span class="contact-label">// Encrypted Email</span>
-                                        <span class="contact-value">sh4d0w_x@protonmail.com</span>
-                                    </div>
-                                </div>
-                                <div class="contact-item">
-                                    <span class="contact-icon">&#x1F310;</span>
-                                    <div>
-                                        <span class="contact-label">// Onion Service</span>
-                                        <span class="contact-value">shadow7x3k...onion</span>
-                                    </div>
-                                </div>
-                                <div class="contact-item">
-                                    <span class="contact-icon">&#x1F511;</span>
-                                    <div>
-                                        <span class="contact-label">// PGP Key</span>
-                                        <span class="contact-value">0xDEAD BEEF CAFE 1337</span>
-                                    </div>
-                                </div>
-                                <div class="contact-item">
-                                    <span class="contact-icon">&#x1F47E;</span>
-                                    <div>
-                                        <span class="contact-label">// HackerOne</span>
-                                        <span class="contact-value">@sh4d0w_x</span>
-                                    </div>
-                                </div>
-                                <div class="contact-item">
-                                    <span class="contact-icon">&#x1F4AC;</span>
-                                    <div>
-                                        <span class="contact-label">// Signal</span>
-                                        <span class="contact-value">Available upon verification</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <p class="terminal-line">
-                                <span class="prompt">$</span>
-                                <span class="command warning-text">⚠ Chỉ liên hệ qua kênh mã hóa. Tôi không phản hồi tin nhắn không mã hóa.</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="contact-pgp">
-                        <div class="pgp-block">
-                            <p>-----BEGIN PGP PUBLIC KEY BLOCK-----</p>
-                            <p class="pgp-content">
-mQINBGR5...truncated...
-jA0EAwMC...for security...
-=xK7f
-                            </p>
-                            <p>-----END PGP PUBLIC KEY BLOCK-----</p>
-                        </div>
-                        <p class="pgp-note">// Import my PGP key to establish secure communication</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-ascii">
-╔══════════════════════════════════════════════════╗
-║  "The quieter you become, the more you can hear" ║
-╚══════════════════════════════════════════════════╝
-            </div>
-            <p class="footer-text">
-                <span class="footer-prompt">root@shadow:~$</span> echo "Stay hidden. Stay safe."
-            </p>
-            <p class="footer-copy">&copy; 2025 SH4D0W_X — All rights encrypted</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+            // Typing effect — uses safe DOM APIs only
+            var el = document.getElementById('typed');
+            var text = 'Chào bạn, tôi là Khánh đây ^^';
+            var idx = 0;
+            var textNode = document.createTextNode('');
+            var cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            el.appendChild(textNode);
+            el.appendChild(cursor);
+            function type() {
+                if (idx <= text.length) {
+                    textNode.textContent = text.substring(0, idx);
+                    idx++;
+                    setTimeout(type, 90);
+                }
+            }
+            setTimeout(type, 800);
+        })();
+    </script>
 </body>
 </html>
